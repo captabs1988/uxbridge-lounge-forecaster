@@ -1,0 +1,18 @@
+step,rows_affected
+Removed exact duplicate rows,262
+Corrected day_of_week to match date,65
+Sorted rows by date,13080
+Standardised item names to menu,654
+Standardised category,523
+Standardised weather spelling,763
+Standardised 'no festival' to None,11952
+Filled blank local_event with None,12504
+Standardised stockout to Yes/No,261
+Removed £ sign from price,1308
+"Fixed temperature (Fahrenheit, text, blanks) using daily median",1019
+Filled blank weather using most common weather that day,392
+Removed minus sign from negative quantities,83
+Blanked impossible sold_qty (more than prepared),39
+Filled blank sold_qty for fresh items (prepared - wasted),201
+Dropped bottle rows with unknown sold_qty,34
+Corrected wasted_qty to prepared - sold (fresh items),128
