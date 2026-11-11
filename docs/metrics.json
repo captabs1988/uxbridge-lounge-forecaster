@@ -1,0 +1,286 @@
+{
+  "data": {
+    "train_rows": 10125,
+    "test_rows": 2921,
+    "train_period": "2025-01-01 to 2026-02-28",
+    "test_period": "2026-03-01 to 2026-06-30",
+    "test_rows_with_true_demand_known": 2332
+  },
+  "unconstraining": {
+    "stockout_rows_in_train": 2324,
+    "avg_demand_added_per_stockout_row": 1.59,
+    "typical_relative_error": 0.077
+  },
+  "experiments": {
+    "Baseline: same day last week": {
+      "MAE": 1.866,
+      "RMSE": 3.762,
+      "R2": 0.853
+    },
+    "Baseline: chef's prep (fresh items)": {
+      "MAE": 1.455,
+      "RMSE": 2.201,
+      "R2": 0.909
+    },
+    "Linear Regression": {
+      "MAE": 2.249,
+      "RMSE": 3.777,
+      "R2": 0.852,
+      "train_seconds": 0.09
+    },
+    "Random Forest": {
+      "MAE": 1.129,
+      "RMSE": 1.953,
+      "R2": 0.961,
+      "train_seconds": 0.97
+    },
+    "Gradient Boosting": {
+      "MAE": 1.099,
+      "RMSE": 1.723,
+      "R2": 0.969,
+      "train_seconds": 2.13
+    },
+    "Gradient Boosting (Poisson)": {
+      "MAE": 1.066,
+      "RMSE": 1.607,
+      "R2": 0.973,
+      "train_seconds": 1.8
+    },
+    "Gradient Boosting (Poisson + unconstrained demand)": {
+      "MAE": 1.051,
+      "RMSE": 1.632,
+      "R2": 0.972,
+      "train_seconds": 1.68
+    },
+    "Tuned Gradient Boosting (final)": {
+      "MAE": 1.039,
+      "RMSE": 1.582,
+      "R2": 0.974
+    }
+  },
+  "tuning": {
+    "method": "RandomizedSearchCV, 12 settings x 4 time-ordered folds",
+    "best_params": {
+      "min_samples_leaf": 10,
+      "max_leaf_nodes": 15,
+      "max_iter": 600,
+      "learning_rate": 0.08,
+      "l2_regularization": 0.1
+    },
+    "seconds": 15.9
+  },
+  "improvement_vs_baseline_pct": 44.3,
+  "prediction_interval": {
+    "method": "calibrated ratios (split conformal), calibration window Jan to Feb 2026",
+    "target_coverage": "80%",
+    "actual_coverage_on_known_days": 0.834,
+    "average_width_portions": 3.75,
+    "ratios": {
+      "low": 0.881,
+      "high": 1.1153
+    }
+  },
+  "stockout_classifier": {
+    "accuracy": 0.831,
+    "precision": 0.586,
+    "recall": 0.552,
+    "f1": 0.568,
+    "confusion_matrix": {
+      "true_no": 2102,
+      "false_alarm": 230,
+      "missed": 264,
+      "caught": 325
+    },
+    "alert_threshold": 0.3,
+    "average_predicted_risk": 0.152,
+    "actual_stockout_rate": 0.202,
+    "always_say_no_accuracy": 0.798
+  },
+  "robustness": {
+    "All known days": {
+      "rows": 2332,
+      "MAE": 1.039
+    },
+    "Weekend (Fri/Sat)": {
+      "rows": 623,
+      "MAE": 1.429
+    },
+    "Weekday": {
+      "rows": 1709,
+      "MAE": 0.897
+    },
+    "Festival days": {
+      "rows": 48,
+      "MAE": 2.004
+    },
+    "Cricket match days": {
+      "rows": 128,
+      "MAE": 1.36
+    },
+    "Rainy days": {
+      "rows": 942,
+      "MAE": 1.031
+    },
+    "Warm days (>18C)": {
+      "rows": 141,
+      "MAE": 1.322
+    },
+    "Temperature forecast wrong by about 2C": {
+      "rows": 2332,
+      "MAE": 1.09
+    }
+  },
+  "latency_and_cost": {
+    "forecast_one_day_ms": 16.0,
+    "total_training_seconds": 22.6,
+    "estimated_energy_kwh": 0.00041,
+    "hardware": "Laptop CPU, no GPU needed",
+    "running_cost": "GBP 0 (free tools, runs on CPU)"
+  },
+  "business_simulation": {
+    "period": "2026-03-01 to 2026-06-30",
+    "items": "fresh items only (bottles keep, so no waste)",
+    "service_level": 0.6,
+    "chef_current_practice": {
+      "stockout_rate": 0.23,
+      "waste_cost_gbp": 5257.05,
+      "portions_prepared": 40815
+    },
+    "ai_recommended_prep": {
+      "stockout_rate_best": 0.133,
+      "stockout_rate_worst": 0.29,
+      "waste_cost_best_gbp": 3548.55,
+      "waste_cost_worst_gbp": 4503.25,
+      "portions_prepared": 40601
+    },
+    "waste_saving_range_pct": [
+      14.3,
+      32.5
+    ],
+    "waste_saving_mid_gbp": 1231.15,
+    "tradeoff_by_service_level": {
+      "0.5": {
+        "stockout_rate_best": 0.187,
+        "stockout_rate_worst": 0.316,
+        "waste_cost_best_gbp": 2831.65,
+        "waste_cost_worst_gbp": 3580.25,
+        "portions_prepared": 39871
+      },
+      "0.6": {
+        "stockout_rate_best": 0.133,
+        "stockout_rate_worst": 0.29,
+        "waste_cost_best_gbp": 3548.55,
+        "waste_cost_worst_gbp": 4503.25,
+        "portions_prepared": 40601
+      },
+      "0.7": {
+        "stockout_rate_best": 0.082,
+        "stockout_rate_worst": 0.264,
+        "waste_cost_best_gbp": 4387.65,
+        "waste_cost_worst_gbp": 5658.9,
+        "portions_prepared": 41367
+      },
+      "0.8": {
+        "stockout_rate_best": 0.043,
+        "stockout_rate_worst": 0.25,
+        "waste_cost_best_gbp": 5560.1,
+        "waste_cost_worst_gbp": 7212.95,
+        "portions_prepared": 42380
+      },
+      "0.9": {
+        "stockout_rate_best": 0.021,
+        "stockout_rate_worst": 0.24,
+        "waste_cost_best_gbp": 6947.35,
+        "waste_cost_worst_gbp": 9041.3,
+        "portions_prepared": 43544
+      }
+    }
+  },
+  "fairness": {
+    "overall_WAPE": 0.066,
+    "rule": "flag a group if its error is more than 1.25x the overall error",
+    "groups": {
+      "category": {
+        "Drink": {
+          "rows": 789,
+          "WAPE": 0.071,
+          "ratio_to_overall": 1.07,
+          "flag": false
+        },
+        "Food": {
+          "rows": 1543,
+          "WAPE": 0.063,
+          "ratio_to_overall": 0.95,
+          "flag": false
+        }
+      },
+      "cuisine": {
+        "Bar": {
+          "rows": 359,
+          "WAPE": 0.071,
+          "ratio_to_overall": 1.08,
+          "flag": false
+        },
+        "Gujarati": {
+          "rows": 503,
+          "WAPE": 0.066,
+          "ratio_to_overall": 1.0,
+          "flag": false
+        },
+        "Marathi": {
+          "rows": 471,
+          "WAPE": 0.068,
+          "ratio_to_overall": 1.03,
+          "flag": false
+        },
+        "Punjabi": {
+          "rows": 547,
+          "WAPE": 0.064,
+          "ratio_to_overall": 0.96,
+          "flag": false
+        },
+        "South Indian": {
+          "rows": 452,
+          "WAPE": 0.061,
+          "ratio_to_overall": 0.93,
+          "flag": false
+        }
+      },
+      "price_tier": {
+        "High": {
+          "rows": 520,
+          "WAPE": 0.061,
+          "ratio_to_overall": 0.92,
+          "flag": false
+        },
+        "Low": {
+          "rows": 752,
+          "WAPE": 0.07,
+          "ratio_to_overall": 1.07,
+          "flag": false
+        },
+        "Moderate": {
+          "rows": 1060,
+          "WAPE": 0.064,
+          "ratio_to_overall": 0.97,
+          "flag": false
+        }
+      }
+    }
+  },
+  "feature_importance": {
+    "item_name": 4.622,
+    "cuisine": 3.041,
+    "is_weekend": 1.86,
+    "day_of_week": 1.516,
+    "category": 1.192,
+    "weather": 0.408,
+    "is_cricket": 0.255,
+    "temperature_c": 0.185,
+    "festival": 0.075,
+    "month": 0.0,
+    "days_since_start": 0.0,
+    "is_festival": -0.001
+  },
+  "shap": "saved docs/figures/shap_summary.png"
+}

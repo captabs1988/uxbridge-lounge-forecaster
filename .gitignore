@@ -218,3 +218,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Private answer key (not for the public repo)
+SPOILER_answer_key.md
