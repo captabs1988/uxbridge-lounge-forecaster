@@ -1,8 +1,8 @@
 # Uxbridge Lounge: Food and Drink Demand and Waste Forecaster
 
 ## 🔗 Live links
-- **Chef dashboard (Streamlit):** _add your Streamlit link here_
-- **API (Vercel):** _add your Vercel link here_ (opens the clickable `/docs` test page)
+- **Chef dashboard (Streamlit):** https://uxbridge-lounge.streamlit.app   <!-- the app for people -->
+- **API (Vercel):** https://uxbridge-lounge-forecaster.vercel.app (opens the clickable `/docs` test page)   <!-- the app for systems -->
 
 AI that tells an Indian restaurant's chef **how many portions of each dish to prepare tomorrow**,
 so less food goes in the bin and fewer dishes sell out.
