@@ -1,5 +1,9 @@
 # Uxbridge Lounge: Food and Drink Demand and Waste Forecaster
 
+## 🔗 Live links
+- **Chef dashboard (Streamlit):** _add your Streamlit link here_
+- **API (Vercel):** _add your Vercel link here_ (opens the clickable `/docs` test page)
+
 AI that tells an Indian restaurant's chef **how many portions of each dish to prepare tomorrow**,
 so less food goes in the bin and fewer dishes sell out.
 Level 7 AI Data Specialist capstone project (ST0763).
@@ -24,8 +28,10 @@ notebooks/         01 generate data, 02 cleaning (step by step), 03 EDA charts a
 src/               the real code: config, generate_data, data_cleaning, features, train, predict
 models/            saved models + metadata (versions, seed, settings)
 api/               FastAPI web service
-app/               Streamlit dashboard (Phase 9)
-tests/             25 automated tests
+app/               Streamlit dashboard (Phase 9) + its own requirements.txt for Streamlit Cloud
+tests/             31 automated tests (cleaning, predict, API, app)
+index.py           the front door Vercel looks for (points to api/main.py)
+vercel.json        Vercel settings (leaves data, notebooks, tests out of the API bundle)
 docs/              business framing, lineage, governance, architecture, model card, metrics, figures
 ```
 
@@ -33,16 +39,32 @@ docs/              business framing, lineage, governance, architecture, model ca
 ```bash
 python -m venv .venv                      # create a private Python environment
 .venv\Scripts\activate                    # Windows (Mac: source .venv/bin/activate)
-pip install -r requirements.txt           # install libraries
+pip install -r requirements-dev.txt       # install everything (requirements.txt = API only)
 
 python -m src.generate_data               # optional: rebuild the raw data (identical, seed 42)
 python -m src.data_cleaning               # clean it: 17 steps, 18 checks
 python -m src.train                       # train, evaluate, explain, save (about 1 minute)
-python -m pytest                          # run the 25 tests
+python -m pytest                          # run the 31 tests
 python -m src.predict                     # print a sample forecast
 
 uvicorn api.main:app --reload             # start the API, then open http://127.0.0.1:8000/docs
+streamlit run app/streamlit_app.py        # start the chef's dashboard, then open http://localhost:8501
 ```
+
+## Deployment (one brain, two doors)
+```
+                 src/predict.py  (the one forecast function)
+                    /                          \
+   app/streamlit_app.py                      api/main.py  (via index.py)
+   people: chef, managers                    systems: till, ordering apps
+   Streamlit Community Cloud                 Vercel (serverless function)
+```
+- **Why two hosts?** Vercel runs short functions, so it suits the API. Streamlit needs a server that
+  stays on (live connection to the browser), so it runs on Streamlit Community Cloud.
+- **Library versions are pinned** to the training run, because saved scikit-learn models may not load
+  in other versions.
+- Each host installs only what it needs: Vercel reads `requirements.txt`, Streamlit Cloud reads
+  `app/requirements.txt`. Laptop development uses `requirements-dev.txt`.
 
 ## Methods in one paragraph
 Daily sales for 24 menu items were generated (seed 42), with waste calibrated to a public Kaggle dataset,

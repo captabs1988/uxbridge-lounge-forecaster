@@ -1,0 +1,10 @@
+# EVERYTHING for working on the project on your laptop: pip install -r requirements-dev.txt
+-r requirements.txt    # start with the runtime libraries above
+streamlit>=1.40        # the chef's dashboard (app/)
+scipy>=1.11            # statistics used in training
+matplotlib>=3.8        # charts
+seaborn>=0.13          # nicer charts
+shap>=0.45             # explainability (why the model predicts what it does)
+httpx>=0.27            # lets the tests call the API
+pytest>=8.0            # runs the tests
+ipykernel>=6.29        # runs the notebooks in VS Code / Jupyter

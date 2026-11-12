@@ -1,0 +1,8 @@
+# Files Vercel does not need to upload (keeps deploys small and fast)
+.venv/
+data/
+notebooks/
+tests/
+docs/
+app/
+.streamlit/

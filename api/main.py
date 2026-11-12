@@ -13,6 +13,7 @@ from datetime import date as Date
 from typing import Dict, Literal, Optional
 
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import RedirectResponse  # sends the visitor to another page
 from pydantic import BaseModel, Field
 
 from src import config
@@ -31,6 +32,12 @@ class ForecastRequest(BaseModel):
     festival: Literal[tuple(config.FESTIVALS)] = "None"
     local_event: Literal[tuple(config.LOCAL_EVENTS)] = "None"
     planned_prep: Optional[Dict[str, int]] = Field(None, examples=[{"Masala Dosa": 25}])
+
+
+@app.get("/", include_in_schema=False)
+def home():
+    """The bare web address (e.g. the Vercel link) opens the clickable API test page."""
+    return RedirectResponse(url="/docs")
 
 
 @app.get("/health")

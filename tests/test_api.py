@@ -30,3 +30,13 @@ def test_forecast_rejects_bad_weather():
 def test_forecast_rejects_crazy_temperature():
     r = client.post("/forecast", json={"date": "2026-07-04", "weather": "Sunny", "temperature_c": 78})
     assert r.status_code == 422
+
+
+def test_home_redirects_to_docs():
+    r = client.get("/", follow_redirects=False)  # don't follow, just check where it points
+    assert r.status_code in (302, 307) and r.headers["location"] == "/docs"
+
+
+def test_vercel_entrypoint_exposes_app():
+    import index  # the file Vercel loads
+    assert index.app is app  # same API object, so Vercel serves exactly what we tested

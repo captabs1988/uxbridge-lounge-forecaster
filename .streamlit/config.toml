@@ -1,0 +1,7 @@
+# Look and feel of the Streamlit app (warm restaurant colours)
+[theme]
+primaryColor = "#C2410C"
+backgroundColor = "#FFFBF5"
+secondaryBackgroundColor = "#F5EDE1"
+textColor = "#2B2118"
+font = "sans serif"
